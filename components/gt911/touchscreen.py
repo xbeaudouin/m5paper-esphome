@@ -4,6 +4,7 @@ from esphome.components import i2c, sensor, touchscreen
 from esphome.const import (
     CONF_ID
 )
+from esphome.const import __version__ as ESPHOME_VERSION
 from esphome import pins
 
 DEPENDENCIES = ['i2c']
