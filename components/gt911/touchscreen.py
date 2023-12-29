@@ -2,9 +2,8 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import i2c, sensor, touchscreen
 from esphome.const import (
-    CONF_ID
+    CONF_ID, CONF_ROTATION,
 )
-from esphome.const import __version__ as ESPHOME_VERSION
 from esphome import pins
 
 DEPENDENCIES = ['i2c']
@@ -20,16 +19,14 @@ CONFIG_SCHEMA = touchscreen.TOUCHSCREEN_SCHEMA.extend({
     cv.Required(CONF_INTERRUPT_PIN): cv.All(
                 pins.internal_gpio_input_pin_schema
             ),
+    cv.Optional(CONF_ROTATION, default=270): cv.int_range(0, 360),
 }).extend(cv.COMPONENT_SCHEMA).extend(i2c.i2c_device_schema(CONF_I2C_ADDR))
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    if cv.Version.parse(ESPHOME_VERSION) < cv.Version.parse("2023.12.0"):
-        await cg.register_component(var, config)
+    await cg.register_component(var, config)
     await i2c.register_i2c_device(var, config)
     await touchscreen.register_touchscreen(var, config)
 
     interrupt_pin = await cg.gpio_pin_expression(config[CONF_INTERRUPT_PIN])
     cg.add(var.set_interrupt_pin(interrupt_pin))
-
-    
