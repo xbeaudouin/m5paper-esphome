@@ -149,7 +149,7 @@ struct GT911TouchscreenStore {
   static void gpio_intr(GT911TouchscreenStore *store);
 };
 
-class GT911 : public Touchscreen, virtual public Component, public i2c::I2CDevice {
+class GT911 : virtual public Touchscreen, virtual public Component, virtual public i2c::I2CDevice {
   public:
     void setup() override;
     void loop() override;
