@@ -48,7 +48,8 @@ async def m5paper_shutdown_main_power_to_code(config, action_id, template_arg, a
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
+    if cv.Version.parse(ESPHOME_VERSION) < cv.Version.parse("2023.12.0"):
+        await cg.register_component(var, config)
 
     if CONF_MAIN_POWER_PIN in config:
         power = await cg.gpio_pin_expression(config[CONF_MAIN_POWER_PIN])
